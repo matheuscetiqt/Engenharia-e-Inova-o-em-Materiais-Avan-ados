@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Cronograma Acadêmico • SENAI CETIQT</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+
+<style>
+body{
+    font-family:'Inter',sans-serif;
+    margin:0;
+    background:#f1f4f8;
+    color:#2c3e50;
+}
+
+header{
+    background:#003366;
+    color:white;
+    padding:20px;
+    text-align:center;
+}
+
+header h1{
+    margin:0;
+}
+
+header span{
+    font-size:14px;
+    opacity:0.9;
+}
+
+.container{
+    max-width:1100px;
+    margin:30px auto;
+    padding:20px;
+}
+
+.card{
+    background:white;
+    padding:25px;
+    border-radius:12px;
+    box-shadow:0 10px 25px rgba(0,0,0,.08);
+}
+
+label{
+    font-weight:600;
+    font-size:14px;
+}
+
+input{
+    width:100%;
+    padding:10px;
+    margin:8px 0 15px;
+    border-radius:6px;
+    border:1px solid #ccc;
+}
+
+.botoes{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+}
+
+button{
+    flex:1;
+    border:none;
+    padding:12px;
+    border-radius:6px;
+    color:white;
+    font-weight:600;
+    cursor:pointer;
+}
+
+button:hover{
+    opacity:.9;
+}
+
+.btn-gerar{
+    background:#ff6600;
+}
+
+.btn-limpar{
+    background:#7f8c8d;
+}
+
+.btn-excel{
+    background:#1d6f42;
+}
+
+.btn-voltar{
+    background:#003366;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    margin-top:25px;
+    font-size:14px;
+}
+
+th{
+    background:#003366;
+    color:white;
+    padding:12px;
+}
+
+td{
+    padding:10px;
+    border-bottom:1px solid #ddd;
+}
+
+tr:nth-child(even){
+    background:#f9fbfd;
+}
+
+footer{
+    text-align:center;
+    margin-top:40px;
+    font-size:13px;
+    color:#555;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1>SENAI CETIQT</h1>
+    <span>Pós-Graduação em Têxteis Técnicos e Inovação</span>
+</header>
+
+<div class="container">
+<div class="card">
+
+<label>Data de início do curso</label>
+<input type="date" id="dataInicio">
+
+<div class="botoes">
+<button class="btn-gerar" onclick="gerarCronograma()">Gerar Cronograma</button>
+<button class="btn-limpar" onclick="limparTabela()">Limpar</button>
+<button class="btn-excel" onclick="exportarExcel()">Exportar para Excel</button>
+<button class="btn-voltar" onclick="voltarPagina()">Voltar à Página Inicial</button>
+</div>
+
+<table id="tabela">
+<thead>
+<tr>
+<th>Disciplina</th>
+<th>Professor</th>
+<th>Carga Horária</th>
+<th>Período</th>
+<th>Início</th>
+<th>Término</th>
+</tr>
+</thead>
+
+<tbody></tbody>
+
+</table>
+
+</div>
+</div>
+
+<footer>
+Sistema de Planejamento Acadêmico • SENAI CETIQT<br>
+Desenvolvido por <strong>Matheus Damica Rodrigues Conceição</strong>
+</footer>
+
+<script>
+
+const disciplinas = [
+
+["Ambientação","Será definido",8,8,0],
+["Estrutura e propriedades de polímeros","Será definido",40,0,40],
+["Caracterização e tecnologia de polímeros","Será definido",40,0,40],
+["Tecnologia Têxtil","Será definido",40,0,40],
+["Aprendizagem Baseada em Projetos I","Será definido",8,8,0],
+["Prospecção mercadológica e tecnológica","Será definido",20,0,20],
+["Gestão de projetos aplicados à área têxtil","Será definido",20,0,20],
+["Aprendizagem Baseada em Projetos II","Será definido",12,8,4],
+["Fenômenos Interfaciais","Será definido",40,0,40],
+["Nanotecnologia aplicada a têxteis técnicos","Será definido",40,0,40],
+["Compósitos e estruturas de têxteis técnicos","Será definido",30,0,30],
+["Avaliação do desempenho de têxteis técnicos","Será definido",30,0,30],
+["Aprendizagem Baseada em Projetos III","Será definido",12,8,4],
+["Aprendizagem Baseada em Projetos IV","Será definido",12,8,4],
+["Projeto Final","Será definido",8,8,0]
+
+];
+
+function formatarData(data){
+return data.toLocaleDateString('pt-BR');
+}
+
+function gerarCronograma(){
+
+const dataInicioInput = document.getElementById("dataInicio").value;
+
+if(!dataInicioInput){
+alert("Escolha a data de início!");
+return;
+}
+
+let dataAtual = new Date(dataInicioInput);
+
+const tbody = document.querySelector("#tabela tbody");
+
+tbody.innerHTML = "";
+
+const cargaTotal = 360;
+const duracaoCursoDias = 270;
+
+disciplinas.forEach(disc=>{
+
+let diasDuracao = Math.round(
+(disc[2] / cargaTotal) * duracaoCursoDias
+);
+
+if(diasDuracao < 1){
+diasDuracao = 1;
+}
+
+const inicio = new Date(dataAtual);
+
+const fim = new Date(dataAtual);
+
+fim.setDate(
+fim.getDate() + diasDuracao
+);
+
+tbody.innerHTML += `
+<tr>
+<td>${disc[0]}</td>
+<td>${disc[1]}</td>
+<td>
+${disc[2]}h (Total)
+• ${disc[3]}h (Presencial)
+• ${disc[4]}h (EaD)
+</td>
+<td>${diasDuracao} dias</td>
+<td>${formatarData(inicio)}</td>
+<td>${formatarData(fim)}</td>
+</tr>
+`;
+
+dataAtual = new Date(fim);
+dataAtual.setDate(
+dataAtual.getDate() + 1
+);
+
+});
+
+}
+
+function exportarExcel(){
+
+const tabela =
+document.getElementById("tabela").outerHTML;
+
+const blob = new Blob(
+['\ufeff', tabela],
+{type:'application/vnd.ms-excel'}
+);
+
+const url = URL.createObjectURL(blob);
+
+const a = document.createElement("a");
+
+a.href = url;
+a.download = "cronograma_textis_tecnicos.xls";
+
+a.click();
+
+URL.revokeObjectURL(url);
+
+}
+
+function limparTabela(){
+
+document.querySelector("#tabela tbody").innerHTML = "";
+
+document.getElementById("dataInicio").value = "";
+
+}
+
+function voltarPagina(){
+
+window.location.href =
+"https://matheuscetiqt.github.io/Paginainicialcronogramadeaula/";
+
+}
+
+</script>
+
+</body>
+</html>
